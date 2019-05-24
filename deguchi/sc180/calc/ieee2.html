@@ -1,0 +1,317 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta name="generator" content="WZ EDITOR 5.0">
+<meta http-equiv="Content-Type" content="text/html; charset=shift_jis">
+<title>ieee2</title>
+<script language="JavaScript">
+<!--
+function d2b_ne(val,bitn)
+{
+	bna = new Array();
+	for( i = 0; i < bitn; i++, val=Math.floor(val/2) )
+		bna[i] = val%2;
+	bns = bna.reverse().toString().replace(/\,/g,"");
+	return bns;
+}
+
+function d2b(val,bitn)
+{
+	if( val < 0 )
+		return "C" + d2b_ne(Math.pow( 2, bitn+1 )+eval(val),bitn);
+	else if( val >= Math.pow( 2, bitn ) )
+		return "C" + d2b_ne(val,bitn);
+	else
+		return d2b_ne(val,bitn);
+}
+
+function d2b_d(val,d)
+{
+	if( val == 0 )
+		d.value = 0;
+	else
+	{
+		bna = new Array();
+		for( i = 0; val > 0; i++, val=Math.floor(val/2) )
+			bna[i] = val%2;
+		d.value = bna.reverse().toString().replace(/\,/g,"");
+	}
+}
+
+function d2bf_d(val,d)
+{
+	bna = new Array();
+	for( i = 0; i < 150; i++ )
+	{
+		val *= 2;
+		val -= (bna[i] = Math.floor(val));
+	}
+	d.value = bna.toString().replace(/\,/g,"");
+}
+
+function tosif(val,f)
+{
+	if( val < 0 )
+	{
+		document.calf.n2s.value = document.calf.n10s.value = "-1";
+		document.calf.n2ss.value = 1;
+		val = -val;
+	}
+	else
+	{
+		document.calf.n2s.value = document.calf.n10s.value = "+1";
+		document.calf.n2ss.value = 0;
+	}
+	document.calf.n10int.value=Math.floor(val);
+	document.calf.n10frac.value=val-Math.floor(val);
+}
+
+function d2bbb_d(val,d)
+{
+	b = 127;
+	c = (val < -b || val > 255-b )?"C":"";
+	val = eval(val) + eval(b);
+	d.value = c + d2b_ne(val,8);
+}
+
+function b2h_d(str,n,d)
+{
+	b = 0;
+	if( str.length > n*4 )
+		c = "+", m = n*4;
+	else
+		c = "", m = str.length;
+	for( i = 0; i < m; i++ )
+		b = b * 2 + eval(str.charAt(i));
+	s = b.toString(16);
+	for( i = s.length; i < n; i++ )
+		s = "0" + s;
+	d.value = c + s;
+}
+
+function h2b_d(str,n,d)
+{
+	d.value = d2b(eval("0x"+ str),n);
+}
+
+function b2ie_d(str,f)
+{
+	f.ieee_s.value = str.charAt(0);
+	f.ieee_e.value = str.substr(1,8);
+	f.ieee_m.value = str.substr(9,23);
+}
+
+function b2d(str)
+{
+	for( n = i = 0; i < str.length; i++ )
+		n = 2*n + eval(str.charAt(i));
+	return n;
+}
+
+function ies2n_d(str,ie)
+{
+	ie.n2ss.value = str;
+}
+
+function iem2n_d(str,ie)
+{
+	e = b2d(ie.ieee_e.value);
+	m = b2d(str);
+	if( e == 0 )
+	{
+		if( m == 0 )
+		{
+			ie.n2m.value = "0.0"
+			ie.n2e.value = 0;
+		}
+		else
+			ie.n2m.value = "0." + str;
+	}
+	else if( e == 255 )
+	{
+		ie.n2ss.value = ie.n2e.value = ie.n2m.value = "";
+		ie.n2s.value = ie.n2int.value = ie.n2frac.value = "";
+		ie.n10s.value = ie.n10int.value = ie.n10frac.value = "";
+		if( m == 0 )
+			ie.n10.value = (ie.ieee_s.value == 1)?"-∞":"+∞";
+		else
+			ie.n10.value = "NaN";
+	}
+	else
+		ie.n2m.value = "1." + str;
+}
+
+function iee2n_d(str,ie)
+{
+	e = b2d(str);
+	m = b2d(ie.ieee_m.value);
+	if( e == 0 )
+	{
+		if( m == 0 )
+		{
+			ie.n2m.value = "0.0";
+			ie.n2e.value = 0;
+		}
+		else
+			ie.n2e.value = -126;
+	}
+	else if( e == 255 )
+	{
+		ie.n2ss.value = ie.n2e.value = ie.n2m.value = "";
+		ie.n2s.value = ie.n2int.value = ie.n2frac.value = "";
+		ie.n10s.value = ie.n10int.value = ie.n10frac.value = "";
+		if( m == 0 )
+			ie.n10.value = (ie.ieee_s.value == 1)?"-∞":"+∞";
+		else
+			ie.n10.value = "NaN";
+	}
+	else
+		ie.n2e.value = e - 127;
+}
+
+function denorm(f)
+{
+	f.n10s.value = f.n2s.value = (f.n2ss.value == 1)?"-1":"+1";
+	n = f.n2m.value.replace(/\./g,"");
+	e = eval(f.n2e.value);
+	if( e < 0 )
+	{
+		f.n2int.value = "0";
+		bns = "";
+		for( i = e; i < -1; i++ )
+			bns = bns + "0";
+		f.n2frac.value = bns + n;
+	}
+	else if( e < 23 )
+	{
+		f.n2int.value = n.substring(0,e+1);
+		f.n2frac.value = n.substring(e+1,24);
+	}
+	else
+	{
+		for( i = e; i > 23; i-- )
+			n = n + "0";
+		f.n2int.value = n;
+		f.n2frac.value = "0";
+	}
+}
+
+function b2d_d(val,d)
+{
+	for( n = i = 0; i < val.length; i++ )
+		n = 2*n + eval(val.charAt(i));
+	d.value = n;
+}
+
+function bf2d_d(val,d)
+{
+	for( n = 0, i = val.length-1; i >= 0; i-- )
+		n = (n + eval(val.charAt(i)))/2;
+	d.value = n;
+}
+
+function d2d_d(dd,d)
+{
+	d.value = eval(dd.n10s.value) * (eval(dd.n10int.value) + eval(dd.n10frac.value));
+}
+//-->
+</script>
+</head>
+<body>
+<!--
+<form name="calt">
+<input type="text" name="n2" onChange="document.calt.disp.value=document.calt.n2.value.toString(16);">
+<input type="text" name="disp">
+</form>
+-->
+<h2>IEEE単精度実数形式（単精度浮動小数点型、float）</h2>
+<ul>
+<table border=1><tr><td>
+IEEE単精度実数形式からの変換（逆の変換は<a href="ieee.html">こちら</a>）
+<form name="calf">
+<table>
+<tr>
+<td colspan="3"><input type="text" name="ieee2" size="45" align="right"
+ onChange="b2h_d(document.calf.ieee2.value,8,document.calf.ieee16)"><sub>(2)</sub>
+＝<input type="text" name="ieee16" size="10" align="right"
+ onChange="h2b_d(document.calf.ieee16.value,32,document.calf.ieee2)"><sub>(16)</sub></td>
+</tr>
+<tr><td>　</td><td align="right"><input type="button" value="分割"
+ onClick="b2ie_d(document.calf.ieee2.value,document.calf)"></td><td>　</td></tr>
+<tr><td align="right"><input type="text" name="ieee_s" size="1" align="right">　</td>
+<td align="center"><input type="text" name="ieee_e" size="10"></td>
+<td><input type="text" name="ieee_m" size="32"></td></tr>
+<tr><td align="right">符号部:s</td><td align="center">指数部:eee</td><td>仮数部:xxxx</td></tr>
+<tr><td align="right"><input type="button" value="↓"
+ onClick="ies2n_d(document.calf.ieee_s.value,document.calf)"></td>
+<td align="right"><input type="button" value="→"
+ onClick="iee2n_d(document.calf.ieee_e.value,document.calf)">　　　</td>
+<td align="left"><input type="button" value="↓"
+ onClick="iem2n_d(document.calf.ieee_m.value,document.calf)"></td></tr>
+<tr><td colspan="3">　　　 (-1)<sup><input type="text" name="n2ss" size="2" align="right"></sup>
+×<input type="text" name="n2m" size="40"><sub>(2)</sub>
+×２<sup><input type="text" name="n2e" size="5"></sup><sub>(10)</sub></td></tr>
+<tr><td>　</td><td align="right"><input type="button" value="固定小数点"
+ onClick="denorm(document.calf)"></td><td>　</td></tr>
+<tr valign="top"><td colspan="2" align="right">=<input type="text" name="n2s" size="2" align="right">
+×<input type="text" name="n2int" align="right"></td>
+<td><tt>.</tt><input type="text" name="n2frac" size="35"><sub>(2)</sub></td></tr>
+<tr><td>　</td>
+<td align="right"><input type="button" value="↓"
+ onClick="b2d_d(document.calf.n2int.value,document.calf.n10int);
+d2d_d(document.calf,document.calf.n10);">　　　</td>
+<td>　　<input type="button" value="↓"
+ onClick="bf2d_d(document.calf.n2frac.value,document.calf.n10frac);
+d2d_d(document.calf,document.calf.n10);"></td></tr>
+<tr><td colspan=2 align="right"><input type="text" name="n10s" size="2" align="right">
+×（<input type="text" name="n10int" size="30" align="right"><sub>(10)</sub></td>
+<td colspan="2">+<input type="text" name="n10frac" size="30"><sub>(10)</sub>）
+＝<input type="text" name="n10" size="30" align="right"><sub>(10)</sub></td></tr>
+</table>
+</form>
+</td></tr>
+</table>
+<li>IEEE 754 形式<br>
+☆単精度実数形式（単精度浮動小数点型、float）の場合
+<table><tr><td>
+<table border=1>
+<tr><td>　</td><td>ビット数</td><td>値</td><td>備考</td></tr>
+<tr><td rowspan="2">符号部</td><td align="right" rowspan="2">1　</td><td align="center">0</td><td>正または零</td></tr>
+<tr><td align="center">1</td><td>負</td></tr>
+<tr><td>指数部</td><td align="right">8　</td><td align="center">eee</td><td>eのバイアス表現（B=127）</td></tr>
+<tr><td>仮数部</td><td align="right">23　</td><td align="center">xxxx</td><td>小数部のみ</td></tr>
+</table>
+</td><td>
+</td></tr></table>
+<table border=1>
+<tr><td>指数部</td><td>仮数部</td><td>表現する値</td><td>備考</td></tr>
+<tr valign="bottom"><td>0</td><td>0</td><td>0</td><td>zero</td></tr>
+<tr valign="bottom"><td>0</td><td>0以外</td><td>(-1)<sup>符号部</sup>×（<tt>0.</tt>仮数部）× 2<sup>-126</sup></td><td>denormalized</td></tr>
+<tr valign="bottom"><td>1～254</td><td>　</td><td>(-1)<sup>符号部</sup>×（<tt>1.</tt>仮数部）× 2<sup>指数部-127</sup></td><td>normalized</td></tr>
+<tr valign="bottom"><td>255</td><td>0</td><td>(-1)<sup>符号部</sup>× ∞</td><td>infinity</td></tr>
+<tr valign="bottom"><td>255</td><td>0以外</td><td>NaN：Not a Number（非数）</td><td>NaN</td></tr>
+</table>
+</ul>
+☆IEEE倍精度実数形式（倍精度浮動小数点型、double）の場合
+<ul>
+<table border=1>
+<tr><td>　</td><td>ビット数</td></tr>
+<tr><td>符号部</td><td align="right">1　</td></tr>
+<tr><td>指数部</td><td align="right">11　</td></tr>
+<tr><td>仮数部</td><td align="right">52　</td></tr>
+</table>
+</ul>
+<br>
+<a HREF="JavaScript:history.back()">戻る</a>
+<hr>
+<address>ご意見などはこちらまで<a HREF="mailto:deguchi@kc.kobe-c.ac.jp?subject=Sc180-ieee-">
+deguchi@kc.kobe-c.ac.jp</a>　ご質問等もお気軽に！</address>
+<!--
+<FONT COLOR="red">2002年度Sc181(1)情報科学基礎演習の履修者の皆さんは、
+電子メールの設定が完了していないので、情報科学教室（図書館下も！）では、
+この上のメールアドレスをクリックしてメールを送信しないこと！</FONT>
+<BR><BR>
+-->
+<i>Copyright &copy; 2005 DEGUCHI Hiroshi, All Rights Reserved.</i>
+</body>
+</html>
