@@ -3,7 +3,7 @@
 <head>
     <meta name="generator" content="WZ EDITOR 5.0">
     <meta http-equiv="Content-Type" content="text/html; charset=shift_jis">
-    <title>ieee</title>
+    <title>fp16-pmac</title>
     <script language="JavaScript">
       <!--
       var exp = 0
@@ -46,7 +46,7 @@
         d.value = bna.toString().replace(/\,/g, '')
       }
 
-      function tosif (val) {
+      function getPlusMinus (val) {
         if (val < 0) {
           document.calf.n2s.value = document.calf.n10s.value = '-1'
           document.calf.n2ss.value = 1
@@ -126,7 +126,7 @@
                     <table>
                         <tr>
                             <td>ｆ：<input type="text" name="n10" align="right"
-                                         onChange="tosif(document.calf.n10.value)"><sub>(10)</sub></td>
+                                         onChange="getPlusMinus(document.calf.n10.value)"><sub>(10)</sub></td>
                             <td>=<input type="text" name="n10s" size="2" align="right">
                                 ×（<input type="text" name="n10int" size="10" align="right"><sub>(10)</sub></td>
                             <td>+<input type="text" name="n10frac"><sub>(10)</sub>）</td>
