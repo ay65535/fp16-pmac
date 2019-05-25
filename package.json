@@ -1,0 +1,28 @@
+{
+  "name": "fp16-pmac",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.17.3",
+    "eslint-plugin-node": "^9.1.0",
+    "eslint-plugin-promise": "^4.1.1",
+    "eslint-plugin-standard": "^4.0.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ay65535/fp16-pmac.git"
+  },
+  "author": "ay65535",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ay65535/fp16-pmac/issues"
+  },
+  "homepage": "https://github.com/ay65535/fp16-pmac#readme"
+}

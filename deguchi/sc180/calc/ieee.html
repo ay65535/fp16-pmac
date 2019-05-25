@@ -1,245 +1,369 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
+<html lang="ja">
 <head>
-<meta name="generator" content="WZ EDITOR 5.0">
-<meta http-equiv="Content-Type" content="text/html; charset=shift_jis">
-<title>ieee</title>
-<script language="JavaScript">
-<!--
-var exp = 0;
-var val_n = 0;
+    <meta name="generator" content="WZ EDITOR 5.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=shift_jis">
+    <title>fp16-pmac</title>
+    <script language="JavaScript" type="text/javascript">
+      <!--
+      let exp = 0
+      let val_n = 0
 
-function d2b_ne(val,bitn)
-{
-	bna = new Array();
-	for( i = 0; i < bitn; i++, val=Math.floor(val/2) )
-		bna[i] = val%2;
-	bns = bna.reverse().toString().replace(/\,/g,"");
-	return bns;
-}
+      function d2b_ne (val, bit_n) {
+        let bna = []
+        for (let i = 0; i < bit_n; i++, val = Math.floor(val / 2))
+          bna[i] = val % 2
+        return bna.reverse().toString().replace(/,/g, '')
+      }
 
-function d2b(val,bitn)
-{
-	if( val < 0 )
-		return "C" + d2b_ne(Math.pow( 2, bitn+1 )+eval(val),bitn);
-	else if( val >= Math.pow( 2, bitn ) )
-		return "C" + d2b_ne(val,bitn);
-	else
-		return d2b_ne(val,bitn);
-}
+      function d2b (val, bit_n) {
+        if (val < 0)
+          return 'C' + d2b_ne(Math.pow(2, bit_n + 1) + eval(val), bit_n)
+        else if (val >= Math.pow(2, bit_n))
+          return 'C' + d2b_ne(val, bit_n)
+        else
+          return d2b_ne(val, bit_n)
+      }
 
-function d2b_d(val,d)
-{
-	if( val == 0 )
-		d.value = 0;
-	else
-	{
-		bna = new Array();
-		for( i = 0; val > 0; i++, val=Math.floor(val/2) )
-			bna[i] = val%2;
-		d.value = bna.reverse().toString().replace(/\,/g,"");
-	}
-}
+      function d2b_d (val, d) {
+        let bna
+        if (val === 0)
+          d.value = 0
+        else {
+          bna = []
+          for (let i = 0; val > 0; i++, val = Math.floor(val / 2))
+            bna[i] = val % 2
+          d.value = bna.reverse().toString().replace(/,/g, '')
+        }
+      }
 
-function d2bf_d(val,d)
-{
-	bna = new Array();
-	for( i = 0; i < 150; i++ )
-	{
-		val *= 2;
-		val -= (bna[i] = Math.floor(val));
-	}
-	d.value = bna.toString().replace(/\,/g,"");
-}
+      function d2bf_d (val, d) {
+        let bna = []
+        for (let i = 0; i < 150; i++) {
+          val *= 2
+          val -= (bna[i] = Math.floor(val))
+        }
+        d.value = bna.toString().replace(/,/g, '')
+      }
 
-function tosif(val)
-{
-	if( val < 0 )
-	{
-		document.calf.n2s.value = document.calf.n10s.value = "-1";
-		document.calf.n2ss.value = 1;
-		val = -val;
-	}
-	else
-	{
-		document.calf.n2s.value = document.calf.n10s.value = "+1";
-		document.calf.n2ss.value = 0;
-	}
-	document.calf.n10int.value=Math.floor(val);
-	document.calf.n10frac.value=val-Math.floor(val);
-	val_n = val;
-}
+      function getPlusMinus (val) {
+        if (val < 0) {
+          document.calf.n2s.value = document.calf.n10s.value = '-1'
+          document.calf.n2ss.value = 1
+          val = -val
+        } else {
+          document.calf.n2s.value = document.calf.n10s.value = '+1'
+          document.calf.n2ss.value = 0
+        }
+        document.calf.n10int.value = Math.floor(val)
+        document.calf.n10frac.value = val - Math.floor(val)
+        val_n = val
+      }
 
-function norm()
-{
-	if( document.calf.n2int.value > 0 || val_n == 0 )
-	{
-		exp = document.calf.n2int.value.length - 1;
-		document.calf.n2e.value = exp;
-		document.calf.n2m.value = document.calf.n2int.value.charAt(0) + '.'
-			+ document.calf.n2int.value.substr(1,exp) + document.calf.n2frac.value
-	}
-	else
-	{
-		for( exp = 0; document.calf.n2frac.value.charAt(-exp) != '1'; exp-- );
-		document.calf.n2e.value = --exp;
-		document.calf.n2m.value = '1.' + document.calf.n2frac.value.substr(-exp,200);
-	}
-}
+      function norm () {
+        if (document.calf.n2int.value > 0 || val_n === 0) {
+          exp = document.calf.n2int.value.length - 1
+          document.calf.n2e.value = exp
+          document.calf.n2m.value = document.calf.n2int.value.charAt(0) + '.'
+            + document.calf.n2int.value.substr(1, exp) + document.calf.n2frac.value
+        } else {
+          for (exp = 0; document.calf.n2frac.value.charAt(-exp) !== '1'; exp--)
+            document.calf.n2e.value = --exp
+          document.calf.n2m.value = '1.' + document.calf.n2frac.value.substr(-exp, 200)
+        }
+      }
 
-function d2bbb_d(val,d)
-{
-	b = 127;
-	c = (val < -b || val > 255-b )?"C":"";
-	val = eval(val) + eval(b);
-	d.value = c + d2b_ne(val,8);
-}
+      function d2bbb_d (val, d) {
+        let b = 127
+        let c = (val < -b || val > 255 - b) ? 'C' : ''
+        val = eval(val) + eval(b.toString())
+        d.value = c + d2b_ne(val, 8)
+      }
 
-function ieee()
-{
-	document.calf.ieee_s.value = document.calf.n2ss.value;
-	if( val_n == 0 )
-		d2bbb_d(-127, document.calf.ieee_e);
-	else
-		d2bbb_d(exp, document.calf.ieee_e);
-	document.calf.ieee_m.value = document.calf.n2m.value.substr(2,32-1-8);
-}
+      function ieee () {
+        document.calf.ieee_s.value = document.calf.n2ss.value
+        if (val_n === 0)
+          d2bbb_d(-127, document.calf.ieee_e)
+        else
+          d2bbb_d(exp, document.calf.ieee_e)
+        document.calf.ieee_m.value = document.calf.n2m.value.substr(2, 32 - 1 - 8)
+      }
 
-function ie2b_d(ie,d)
-{
-	d.value = ie.ieee_s.value + ie.ieee_e.value + ie.ieee_m.value;
-	b2h_d(d.value,8,ie.ieee16)
-}
+      function ie2b_d (ie, d) {
+        d.value = ie.ieee_s.value + ie.ieee_e.value + ie.ieee_m.value
+        b2h_d(d.value, 8, ie.ieee16)
+      }
 
-function b2h_d(str,n,d)
-{
-	b = 0;
-	if( str.length > n*4 )
-		c = "+", m = n*4;
-	else
-		c = "", m = str.length;
-	for( i = 0; i < m; i++ )
-		b = b * 2 + eval(str.charAt(i));
-	s = b.toString(16);
-	for( i = s.length; i < n; i++ )
-		s = "0" + s;
-	d.value = c + s;
-}
+      function b2h_d (str, n, d) {
+        let i
+        let b = 0
+        let c
+        let m
+        if (str.length > n * 4) {
+          c = '+'
+          m = n * 4
+        } else {
+          c = ''
+          m = str.length
+        }
+        for (i = 0; i < m; i++)
+          b = b * 2 + eval(str.charAt(i))
+        let s = b.toString(16)
+        for (i = s.length; i < n; i++)
+          s = '0' + s
+        d.value = c + s
+      }
 
-function h2b_d(str,n,d)
-{
-	d.value = d2b(eval("0x"+ str),n);
-}
-//-->
-</script>
+      function h2b_d (str, n, d) {
+        d.value = d2b(eval('0x' + str), n)
+      }
+
+      //-->
+    </script>
 </head>
 <body>
-<h2>IEEE単精度実数形式（単精度浮動小数点型、float）</h2>
+<h2>PMAC半精度実数形式（半精度浮動小数点型）</h2>
 <ul>
-<table border=1><tr><td colspan="2">
-IEEE単精度実数形式（簡略版）への変換（逆の変換は<a href="ieee2.html">こちら</a>）
-<form name="calf">
-<table><tr>
-<td>ｆ：<input type="text" name="n10" align="right"
- onChange="tosif(document.calf.n10.value)"><sub>(10)</sub></td>
-<td>=<input type="text" name="n10s" size="2" align="right">
-×（<input type="text" name="n10int" size="10" align="right"><sub>(10)</sub></td>
-<td>+<input type="text" name="n10frac"><sub>(10)</sub>）</td></tr>
-<tr><td>　</td>
-<td align="right"><input type="button" value="↓"
- onClick="d2b_d(document.calf.n10int.value,document.calf.n2int)">　　　</td>
-<td>　　<input type="button" value="↓"
- onClick="d2bf_d(document.calf.n10frac.value,document.calf.n2frac)"></td></tr>
-<tr valign="top"><td colspan="2" align="right">=<input type="text" name="n2s" size="2" align="right">
-×<input type="text" name="n2int" align="right"></td>
-<td><tt>.</tt><input type="text" name="n2frac" size="35"><sub>(2)</sub></td></tr>
-<tr><td>　</td><td align="right"><input type="button" value="正規化"
- onClick="norm()"></td></tr>
-<tr><td colspan="3" align="right">= (-1)<sup><input type="text" name="n2ss" size="2" align="right"></sup>
-×<input type="text" name="n2m" size="40"><sub>(2)</sub>
-×２<sup><input type="text" name="n2e" size="5"></sup><sub>(10)</sub></td></tr>
-<tr><td>　</td><td align="right"><input type="button" value="IEEE"
- onClick="ieee()"></td><td>　</td></tr>
-<tr><td align="right"><input type="text" name="ieee_s" size="1" align="right"></td>
-<td align="center"><input type="text" name="ieee_e" size="10"></td>
-<td><input type="text" name="ieee_m" size="32"></td></tr>
-<tr><td align="right">符号部:s</td><td align="center">指数部:eee</td><td>仮数部:xxxx</td></tr>
-<tr><td>　</td><td align="right"><input type="button" value="結合"
- onClick="ie2b_d(document.calf,document.calf.ieee2)"></td><td>　</td></tr>
-<tr><td colspan="3" align="right"><input type="text" name="ieee2" size="45" align="right"
- onChange="b2h_d(document.calf.ieee2.value,8,document.calf.ieee16)"><sub>(2)</sub>
-＝<input type="text" name="ieee16" size="10" align="right"
- onChange="h2b_d(document.calf.ieee16.value,32,document.calf.ieee2)"><sub>(16)</sub></td>
-</table>
-</form>
-</td></tr>
-</table>
-<li>簡略版
-<table><tr><td colspan=2>
-・f≠0 のとき（正式にはnormalized）
-</td><td colspan=2>
-・f＝0 のときは（zero）
-</td></tr>
-<tr valign="bottom"><td colspan=2>
-　f = (-1)<sup>s</sup> × <tt>1.xxxx</tt> ×２<sup>e</sup> の形に正規化する
-</td><td colspan=2>
-　全ビットを 0 にする
-</td></tr>
-<tr valign="top"><td>　</td><td>
-<table border=1>
-<tr><td>　</td><td>ビット数</td><td>値</td><td>備考</td></tr>
-<tr><td rowspan="2">符号部</td><td align="right" rowspan="2">1　</td><td align="center">0</td><td>正または零</td></tr>
-<tr><td align="center">1</td><td>負</td></tr>
-<tr><td>指数部</td><td align="right">8　</td><td align="center">eee</td><td>eのバイアス表現（B=127）</td></tr>
-<tr><td>仮数部</td><td align="right">23　</td><td align="center">xxxx</td><td>小数部のみ</td></tr>
-</table>
-</td><td>　</td><td>
-<table border=1>
-<tr><td>　</td><td>ビット数</td><td>値</td></tr>
-<tr><td>符号部</td><td align="right">1　</td><td>0</td></tr>
-<tr><td>指数部</td><td align="right">8　</td><td>00000000</td></tr>
-<tr><td>仮数部</td><td align="right">23　</td><td>0000……000</td></tr>
-</table>
+    <li>
+        <table border=1>
+            <tr>
+                <td colspan="2">
+                    PMAC半精度実数形式（簡略版）への変換（逆の変換は<a href="ieee2.html">こちら</a>）
+                    <form name="calf" action="">
+                        <table>
+                            <tr>
+                                <td>ｆ：<label>
+                                    <input type="text" name="n10" align="right"
+                                           onChange="getPlusMinus(document.calf.n10.value)">
+                                    <sub>(10)</sub></label></td>
+                                <td><label>=<input type="text" name="n10s" size="2" align="right"></label>
+                                    ×（<label>
+                                        <input type="text" name="n10int" size="10" align="right">
+                                        <sub>(10)</sub></label></td>
+                                <td>+<label>
+                                    <input type="text" name="n10frac">
+                                    <sub>(10)</sub></label>）
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>　</td>
+                                <td align="right"><input type="button" value="↓"
+                                                         onClick="d2b_d(document.calf.n10int.value,document.calf.n2int)">　　　
+                                </td>
+                                <td>　　<input type="button" value="↓"
+                                             onClick="d2bf_d(document.calf.n10frac.value,document.calf.n2frac)"></td>
+                            </tr>
+                            <tr valign="top">
+                                <td colspan="2" align="right">
+                                    <label>=<input type="text" name="n2s" size="2" align="right"></label>
+                                    <label>×<input type="text" name="n2int" align="right"></label>
+                                </td>
+                                <td>
+                                    <tt>.</tt>
+                                    <label><input type="text" name="n2frac" size="35"><sub>(2)</sub></label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>　</td>
+                                <td align="right"><input type="button" value="正規化" onClick="norm()"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" align="right">= <label>(-1)<sup>
+                                    <input type="text" name="n2ss" size="2"
+                                           align="right">
+                                </sup></label>
+                                    ×<label>
+                                        <input type="text" name="n2m" size="40">
+                                        <sub>(2)</sub></label>
+                                    ×２<label><sup>
+                                        <input type="text" name="n2e" size="5">
+                                    </sup><sub>(10)</sub></label></td>
+                            </tr>
+                            <tr>
+                                <td>　</td>
+                                <td align="right"><input type="button" value="PMAC"
+                                                         onClick="ieee()"></td>
+                                <td>　</td>
+                            </tr>
+                            <tr>
+                                <td align="right"><input id="sign_part" type="text" name="ieee_s" size="1"
+                                                         align="right"></td>
+                                <td align="center"><input id="exp_part" type="text" name="ieee_e" size="10"></td>
+                                <td><input id="frac_part" type="text" name="ieee_m" size="32"></td>
+                            </tr>
+                            <tr>
+                                <td align="right"><label for="sign_part">符号部:s</label></td>
+                                <td align="center"><label for="exp_part">指数部:ee</label></td>
+                                <td><label for="frac_part">仮数部:xxx</label></td>
+                            </tr>
+                            <tr>
+                                <td>　</td>
+                                <td align="right"><input type="button" value="結合"
+                                                         onClick="ie2b_d(document.calf,document.calf.ieee2)"></td>
+                                <td>　</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" align="right">
+                                    <label>
+                                        <input type="text" name="ieee2" size="45" align="right"
+                                               onChange="b2h_d(document.calf.ieee2.value,8,document.calf.ieee16)">
+                                        <sub>(2)</sub>
+                                    </label>
+                                    ＝
+                                    <label>
+                                        <input type="text" name="ieee16" size="10" align="right"
+                                               onChange="h2b_d(document.calf.ieee16.value,32,document.calf.ieee2)">
+                                        <sub>(16)</sub>
+                                    </label>
+                                </td>
+                        </table>
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </li>
+    <li>簡略版
+        <table>
+            <tr>
+                <td colspan=2>
+                    ・f≠0 のとき（正式にはnormalized）
+                </td>
+                <td colspan=2>
+                    ・f＝0 のときは（zero）
+                </td>
+            </tr>
+            <tr valign="bottom">
+                <td colspan=2>
+                    　f = (-1)<sup>s</sup> × <tt>1.xxx</tt> ×２<sup>e</sup> の形に正規化する
+                </td>
+                <td colspan=2>
+                    　全ビットを 0 にする
+                </td>
+            </tr>
+            <tr valign="top">
+                <td>　</td>
+                <td>
+                    <table border=1>
+                        <tr>
+                            <td>　</td>
+                            <td>ビット数</td>
+                            <td>値</td>
+                            <td>備考</td>
+                        </tr>
+                        <tr>
+                            <td>指数部</td>
+                            <td align="right">4　</td>
+                            <td align="center">ee</td>
+                            <td>eのバイアス表現（B=
+                                <del>127</del>
+                                ）
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>仮数部</td>
+                            <td align="right">12　</td>
+                            <td align="center">xxx</td>
+                            <td>小数部のみ</td>
+                        </tr>
+                    </table>
+                </td>
+                <td>　</td>
+                <td>
+                    <table border=1>
+                        <tr>
+                            <td>　</td>
+                            <td>ビット数</td>
+                            <td>値</td>
+                        </tr>
+                        <tr>
+                            <td>指数部</td>
+                            <td align="right">4　</td>
+                            <td>0000</td>
+                        </tr>
+                        <tr>
+                            <td>仮数部</td>
+                            <td align="right">12　</td>
+                            <td>000000000000</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </li>
 </ul>
-</td></tr></table>
-<li>正式版（IEEE 754 形式）<br>
-◎指数部が細分化されている！
-<table border=1>
-<tr><td>指数部</td><td>仮数部</td><td>表現する値</td><td>備考</td></tr>
-<tr valign="bottom"><td>0</td><td>0</td><td>0</td><td>zero</td></tr>
-<tr valign="bottom"><td>0</td><td>0以外</td><td>(-1)<sup>符号部</sup>×（<tt>0.</tt>仮数部）× 2<sup>-126</sup></td><td>denormalized</td></tr>
-<tr valign="bottom"><td>1～254</td><td>　</td><td>(-1)<sup>符号部</sup>×（<tt>1.</tt>仮数部）× 2<sup>指数部-127</sup></td><td>normalized</td></tr>
-<tr valign="bottom"><td>255</td><td>0</td><td>(-1)<sup>符号部</sup>× ∞</td><td>infinity</td></tr>
-<tr valign="bottom"><td>255</td><td>0以外</td><td>NaN：Not a Number（非数）</td><td>NaN</td></tr>
-</table>
+<ul>
+    <li>正式版（PMAC fp16 形式）<br>
+        ◎指数部が細分化されている！
+        <table border=1>
+            <tr>
+                <td>指数部</td>
+                <td>仮数部</td>
+                <td>表現する値</td>
+                <td>備考</td>
+            </tr>
+            <tr valign="bottom">
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td>zero</td>
+            </tr>
+            <tr valign="bottom">
+                <td>0</td>
+                <td>0以外</td>
+                <td>(-1)<sup>符号部</sup>×（<tt>0.</tt>仮数部）× 2<sup>-126</sup></td>
+                <td>denormalized</td>
+            </tr>
+            <tr valign="bottom">
+                <td>1～14</td>
+                <td>　</td>
+                <td>（<tt>1.</tt>仮数部）× 2<sup>指数部-127</sup></td>
+                <td>normalized</td>
+            </tr>
+            <tr valign="bottom">
+                <td>15</td>
+                <td>0</td>
+                <td> ∞</td>
+                <td>infinity</td>
+            </tr>
+            <tr valign="bottom">
+                <td>15</td>
+                <td>0以外</td>
+                <td>NaN：Not a Number（非数）</td>
+                <td>NaN</td>
+            </tr>
+        </table>
+    </li>
 </ul>
+<!--
 <br>
 ☆IEEE倍精度実数形式（倍精度浮動小数点型、double）の場合
 <ul>
-<table border=1>
-<tr><td>　</td><td>ビット数</td></tr>
-<tr><td>符号部</td><td align="right">1　</td></tr>
-<tr><td>指数部</td><td align="right">11　</td></tr>
-<tr><td>仮数部</td><td align="right">52　</td></tr>
-</table>
+    <table border=1>
+        <tr>
+            <td>　</td>
+            <td>ビット数</td>
+        </tr>
+        <tr>
+            <td>符号部</td>
+            <td align="right">1　</td>
+        </tr>
+        <tr>
+            <td>指数部</td>
+            <td align="right">11　</td>
+        </tr>
+        <tr>
+            <td>仮数部</td>
+            <td align="right">52　</td>
+        </tr>
+    </table>
 </ul>
+-->
 <!--
 <form name="calt">
 <input type="text" name="n2" onChange="b2d_d(document.calt.n2.value,document.calt.disp)">
 <input type="text" name="disp">
 </form>
 -->
-<br>
-<a HREF="JavaScript:history.back()">戻る</a>
-<hr>
-<address>ご意見などはこちらまで<a HREF="mailto:deguchi@kc.kobe-c.ac.jp?subject=Sc180-ieee-">
-deguchi@kc.kobe-c.ac.jp</a>　ご質問等もお気軽に！</address>
-<!--
-<FONT COLOR="red">2002年度Sc181(1)情報科学基礎演習の履修者の皆さんは、
-電子メールの設定が完了していないので、情報科学教室（図書館下も！）では、
-この上のメールアドレスをクリックしてメールを送信しないこと！</FONT>
-<BR><BR>
--->
-<i>Copyright &copy; 2005 DEGUCHI Hiroshi, All Rights Reserved.</i>
+<i>Copyright &copy; 2005 DEGUCHI Hiroshi, 2019 ay65535 All Rights Reserved.</i>
 </body>
 </html>
