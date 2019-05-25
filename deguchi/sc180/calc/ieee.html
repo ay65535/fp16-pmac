@@ -6,15 +6,14 @@
     <title>fp16-pmac</title>
     <script language="JavaScript" type="text/javascript">
       <!--
-      var exp = 0
-      var val_n = 0
+      let exp = 0
+      let val_n = 0
 
       function d2b_ne (val, bitn) {
-        bna = []
-        for (i = 0; i < bitn; i++, val = Math.floor(val / 2))
+        let bna = []
+        for (let i = 0; i < bitn; i++, val = Math.floor(val / 2))
           bna[i] = val % 2
-        bns = bna.reverse().toString().replace(/,/g, '')
-        return bns
+        return bna.reverse().toString().replace(/,/g, '')
       }
 
       function d2b (val, bitn) {
@@ -27,19 +26,20 @@
       }
 
       function d2b_d (val, d) {
+        let bna
         if (val === 0)
           d.value = 0
         else {
           bna = []
-          for (i = 0; val > 0; i++, val = Math.floor(val / 2))
+          for (let i = 0; val > 0; i++, val = Math.floor(val / 2))
             bna[i] = val % 2
           d.value = bna.reverse().toString().replace(/,/g, '')
         }
       }
 
       function d2bf_d (val, d) {
-        bna = []
-        for (i = 0; i < 150; i++) {
+        let bna = []
+        for (let i = 0; i < 150; i++) {
           val *= 2
           val -= (bna[i] = Math.floor(val))
         }
@@ -74,9 +74,9 @@
       }
 
       function d2bbb_d (val, d) {
-        b = 127
-        c = (val < -b || val > 255 - b) ? 'C' : ''
-        val = eval(val) + eval(b)
+        let b = 127
+        let c = (val < -b || val > 255 - b) ? 'C' : ''
+        val = eval(val) + eval(b.toString())
         d.value = c + d2b_ne(val, 8)
       }
 
@@ -95,7 +95,10 @@
       }
 
       function b2h_d (str, n, d) {
-        b = 0
+        let i
+        let b = 0
+        let c
+        let m
         if (str.length > n * 4) {
           c = '+'
           m = n * 4
@@ -105,7 +108,7 @@
         }
         for (i = 0; i < m; i++)
           b = b * 2 + eval(str.charAt(i))
-        s = b.toString(16)
+        let s = b.toString(16)
         for (i = s.length; i < n; i++)
           s = '0' + s
         d.value = c + s
