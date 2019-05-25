@@ -1,19 +1,19 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
+<html lang="ja">
 <head>
     <meta name="generator" content="WZ EDITOR 5.0">
     <meta http-equiv="Content-Type" content="text/html; charset=shift_jis">
     <title>fp16-pmac</title>
-    <script language="JavaScript">
+    <script language="JavaScript" type="text/javascript">
       <!--
       var exp = 0
       var val_n = 0
 
       function d2b_ne (val, bitn) {
-        bna = new Array()
+        bna = []
         for (i = 0; i < bitn; i++, val = Math.floor(val / 2))
           bna[i] = val % 2
-        bns = bna.reverse().toString().replace(/\,/g, '')
+        bns = bna.reverse().toString().replace(/,/g, '')
         return bns
       }
 
@@ -27,23 +27,23 @@
       }
 
       function d2b_d (val, d) {
-        if (val == 0)
+        if (val === 0)
           d.value = 0
         else {
-          bna = new Array()
+          bna = []
           for (i = 0; val > 0; i++, val = Math.floor(val / 2))
             bna[i] = val % 2
-          d.value = bna.reverse().toString().replace(/\,/g, '')
+          d.value = bna.reverse().toString().replace(/,/g, '')
         }
       }
 
       function d2bf_d (val, d) {
-        bna = new Array()
+        bna = []
         for (i = 0; i < 150; i++) {
           val *= 2
           val -= (bna[i] = Math.floor(val))
         }
-        d.value = bna.toString().replace(/\,/g, '')
+        d.value = bna.toString().replace(/,/g, '')
       }
 
       function getPlusMinus (val) {
@@ -61,13 +61,13 @@
       }
 
       function norm () {
-        if (document.calf.n2int.value > 0 || val_n == 0) {
+        if (document.calf.n2int.value > 0 || val_n === 0) {
           exp = document.calf.n2int.value.length - 1
           document.calf.n2e.value = exp
           document.calf.n2m.value = document.calf.n2int.value.charAt(0) + '.'
             + document.calf.n2int.value.substr(1, exp) + document.calf.n2frac.value
         } else {
-          for (exp = 0; document.calf.n2frac.value.charAt(-exp) != '1'; exp--)
+          for (exp = 0; document.calf.n2frac.value.charAt(-exp) !== '1'; exp--)
             document.calf.n2e.value = --exp
           document.calf.n2m.value = '1.' + document.calf.n2frac.value.substr(-exp, 200)
         }
@@ -82,7 +82,7 @@
 
       function ieee () {
         document.calf.ieee_s.value = document.calf.n2ss.value
-        if (val_n == 0)
+        if (val_n === 0)
           d2bbb_d(-127, document.calf.ieee_e)
         else
           d2bbb_d(exp, document.calf.ieee_e)
@@ -96,10 +96,13 @@
 
       function b2h_d (str, n, d) {
         b = 0
-        if (str.length > n * 4)
-          c = '+', m = n * 4
-        else
-          c = '', m = str.length
+        if (str.length > n * 4) {
+          c = '+'
+          m = n * 4
+        } else {
+          c = ''
+          m = str.length
+        }
         for (i = 0; i < m; i++)
           b = b * 2 + eval(str.charAt(i))
         s = b.toString(16)
@@ -249,79 +252,84 @@
                             <td>000000000000</td>
                         </tr>
                     </table>
-</ul>
-</td></tr></table>
-<li>正式版（PMAC fp16 形式）<br>
-    ◎指数部が細分化されている！
-    <table border=1>
-        <tr>
-            <td>指数部</td>
-            <td>仮数部</td>
-            <td>表現する値</td>
-            <td>備考</td>
-        </tr>
-        <tr valign="bottom">
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>zero</td>
-        </tr>
-        <tr valign="bottom">
-            <td>0</td>
-            <td>0以外</td>
-            <td>(-1)<sup>符号部</sup>×（<tt>0.</tt>仮数部）× 2<sup>-126</sup></td>
-            <td>denormalized</td>
-        </tr>
-        <tr valign="bottom">
-            <td>1～14</td>
-            <td>　</td>
-            <td>（<tt>1.</tt>仮数部）× 2<sup>指数部-127</sup></td>
-            <td>normalized</td>
-        </tr>
-        <tr valign="bottom">
-            <td>15</td>
-            <td>0</td>
-            <td> ∞</td>
-            <td>infinity</td>
-        </tr>
-        <tr valign="bottom">
-            <td>15</td>
-            <td>0以外</td>
-            <td>NaN：Not a Number（非数）</td>
-            <td>NaN</td>
-        </tr>
-    </table>
-    </ul>
-    <!--
-    <br>
-    ☆IEEE倍精度実数形式（倍精度浮動小数点型、double）の場合
-    <ul>
-        <table border=1>
-            <tr>
-                <td>　</td>
-                <td>ビット数</td>
-            </tr>
-            <tr>
-                <td>符号部</td>
-                <td align="right">1　</td>
-            </tr>
-            <tr>
-                <td>指数部</td>
-                <td align="right">11　</td>
-            </tr>
-            <tr>
-                <td>仮数部</td>
-                <td align="right">52　</td>
+                </td>
             </tr>
         </table>
-    </ul>
-    -->
-    <!--
-    <form name="calt">
-    <input type="text" name="n2" onChange="b2d_d(document.calt.n2.value,document.calt.disp)">
-    <input type="text" name="disp">
-    </form>
-    -->
-    <i>Copyright &copy; 2005 DEGUCHI Hiroshi, 2019 ay65535 All Rights Reserved.</i>
+    </li>
+</ul>
+<ul>
+    <li>正式版（PMAC fp16 形式）<br>
+        ◎指数部が細分化されている！
+        <table border=1>
+            <tr>
+                <td>指数部</td>
+                <td>仮数部</td>
+                <td>表現する値</td>
+                <td>備考</td>
+            </tr>
+            <tr valign="bottom">
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td>zero</td>
+            </tr>
+            <tr valign="bottom">
+                <td>0</td>
+                <td>0以外</td>
+                <td>(-1)<sup>符号部</sup>×（<tt>0.</tt>仮数部）× 2<sup>-126</sup></td>
+                <td>denormalized</td>
+            </tr>
+            <tr valign="bottom">
+                <td>1～14</td>
+                <td>　</td>
+                <td>（<tt>1.</tt>仮数部）× 2<sup>指数部-127</sup></td>
+                <td>normalized</td>
+            </tr>
+            <tr valign="bottom">
+                <td>15</td>
+                <td>0</td>
+                <td> ∞</td>
+                <td>infinity</td>
+            </tr>
+            <tr valign="bottom">
+                <td>15</td>
+                <td>0以外</td>
+                <td>NaN：Not a Number（非数）</td>
+                <td>NaN</td>
+            </tr>
+        </table>
+    </li>
+</ul>
+<!--
+<br>
+☆IEEE倍精度実数形式（倍精度浮動小数点型、double）の場合
+<ul>
+    <table border=1>
+        <tr>
+            <td>　</td>
+            <td>ビット数</td>
+        </tr>
+        <tr>
+            <td>符号部</td>
+            <td align="right">1　</td>
+        </tr>
+        <tr>
+            <td>指数部</td>
+            <td align="right">11　</td>
+        </tr>
+        <tr>
+            <td>仮数部</td>
+            <td align="right">52　</td>
+        </tr>
+    </table>
+</ul>
+-->
+<!--
+<form name="calt">
+<input type="text" name="n2" onChange="b2d_d(document.calt.n2.value,document.calt.disp)">
+<input type="text" name="disp">
+</form>
+-->
+<i>Copyright &copy; 2005 DEGUCHI Hiroshi, 2019 ay65535 All Rights Reserved.</i>
 </body>
 </html>
