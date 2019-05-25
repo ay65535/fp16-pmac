@@ -9,20 +9,20 @@
       let exp = 0
       let val_n = 0
 
-      function d2b_ne (val, bitn) {
+      function d2b_ne (val, bit_n) {
         let bna = []
-        for (let i = 0; i < bitn; i++, val = Math.floor(val / 2))
+        for (let i = 0; i < bit_n; i++, val = Math.floor(val / 2))
           bna[i] = val % 2
         return bna.reverse().toString().replace(/,/g, '')
       }
 
-      function d2b (val, bitn) {
+      function d2b (val, bit_n) {
         if (val < 0)
-          return 'C' + d2b_ne(Math.pow(2, bitn + 1) + eval(val), bitn)
-        else if (val >= Math.pow(2, bitn))
-          return 'C' + d2b_ne(val, bitn)
+          return 'C' + d2b_ne(Math.pow(2, bit_n + 1) + eval(val), bit_n)
+        else if (val >= Math.pow(2, bit_n))
+          return 'C' + d2b_ne(val, bit_n)
         else
-          return d2b_ne(val, bitn)
+          return d2b_ne(val, bit_n)
       }
 
       function d2b_d (val, d) {
