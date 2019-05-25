@@ -121,76 +121,104 @@
 <body>
 <h2>PMAC半精度実数形式（半精度浮動小数点型）</h2>
 <ul>
-    <table border=1>
-        <tr>
-            <td colspan="2">
-                PMAC半精度実数形式（簡略版）への変換（逆の変換は<a href="ieee2.html">こちら</a>）
-                <form name="calf">
-                    <table>
-                        <tr>
-                            <td>ｆ：<input type="text" name="n10" align="right"
-                                         onChange="getPlusMinus(document.calf.n10.value)"><sub>(10)</sub></td>
-                            <td>=<input type="text" name="n10s" size="2" align="right">
-                                ×（<input type="text" name="n10int" size="10" align="right"><sub>(10)</sub></td>
-                            <td>+<input type="text" name="n10frac"><sub>(10)</sub>）</td>
-                        </tr>
-                        <tr>
-                            <td>　</td>
-                            <td align="right"><input type="button" value="↓"
-                                                     onClick="d2b_d(document.calf.n10int.value,document.calf.n2int)">　　　
-                            </td>
-                            <td>　　<input type="button" value="↓"
-                                         onClick="d2bf_d(document.calf.n10frac.value,document.calf.n2frac)"></td>
-                        </tr>
-                        <tr valign="top">
-                            <td colspan="2" align="right">=<input type="text" name="n2s" size="2" align="right">
-                                ×<input type="text" name="n2int" align="right"></td>
-                            <td><tt>.</tt><input type="text" name="n2frac" size="35"><sub>(2)</sub></td>
-                        </tr>
-                        <tr>
-                            <td>　</td>
-                            <td align="right"><input type="button" value="正規化"
-                                                     onClick="norm()"></td>
-                        </tr>
-                        <tr>
-                            <td colspan="3" align="right">= (-1)<sup><input type="text" name="n2ss" size="2"
-                                                                            align="right"></sup>
-                                ×<input type="text" name="n2m" size="40"><sub>(2)</sub>
-                                ×２<sup><input type="text" name="n2e" size="5"></sup><sub>(10)</sub></td>
-                        </tr>
-                        <tr>
-                            <td>　</td>
-                            <td align="right"><input type="button" value="PMAC"
-                                                     onClick="ieee()"></td>
-                            <td>　</td>
-                        </tr>
-                        <tr>
-                            <td align="right"><input type="text" name="ieee_s" size="1" align="right"></td>
-                            <td align="center"><input type="text" name="ieee_e" size="10"></td>
-                            <td><input type="text" name="ieee_m" size="32"></td>
-                        </tr>
-                        <tr>
-                            <td align="right">符号部:s</td>
-                            <td align="center">指数部:ee</td>
-                            <td>仮数部:xxx</td>
-                        </tr>
-                        <tr>
-                            <td>　</td>
-                            <td align="right"><input type="button" value="結合"
-                                                     onClick="ie2b_d(document.calf,document.calf.ieee2)"></td>
-                            <td>　</td>
-                        </tr>
-                        <tr>
-                            <td colspan="3" align="right"><input type="text" name="ieee2" size="45" align="right"
-                                                                 onChange="b2h_d(document.calf.ieee2.value,8,document.calf.ieee16)"><sub>(2)</sub>
-                                ＝<input type="text" name="ieee16" size="10" align="right"
-                                        onChange="h2b_d(document.calf.ieee16.value,32,document.calf.ieee2)"><sub>(16)</sub>
-                            </td>
-                    </table>
-                </form>
-            </td>
-        </tr>
-    </table>
+    <li>
+        <table border=1>
+            <tr>
+                <td colspan="2">
+                    PMAC半精度実数形式（簡略版）への変換（逆の変換は<a href="ieee2.html">こちら</a>）
+                    <form name="calf" action="">
+                        <table>
+                            <tr>
+                                <td>ｆ：<label>
+                                    <input type="text" name="n10" align="right"
+                                           onChange="getPlusMinus(document.calf.n10.value)">
+                                    <sub>(10)</sub></label></td>
+                                <td><label>=<input type="text" name="n10s" size="2" align="right"></label>
+                                    ×（<label>
+                                        <input type="text" name="n10int" size="10" align="right">
+                                        <sub>(10)</sub></label></td>
+                                <td>+<label>
+                                    <input type="text" name="n10frac">
+                                    <sub>(10)</sub></label>）
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>　</td>
+                                <td align="right"><input type="button" value="↓"
+                                                         onClick="d2b_d(document.calf.n10int.value,document.calf.n2int)">　　　
+                                </td>
+                                <td>　　<input type="button" value="↓"
+                                             onClick="d2bf_d(document.calf.n10frac.value,document.calf.n2frac)"></td>
+                            </tr>
+                            <tr valign="top">
+                                <td colspan="2" align="right">
+                                    <label>=<input type="text" name="n2s" size="2" align="right"></label>
+                                    <label>×<input type="text" name="n2int" align="right"></label>
+                                </td>
+                                <td>
+                                    <tt>.</tt>
+                                    <label><input type="text" name="n2frac" size="35"><sub>(2)</sub></label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>　</td>
+                                <td align="right"><input type="button" value="正規化" onClick="norm()"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" align="right">= <label>(-1)<sup>
+                                    <input type="text" name="n2ss" size="2"
+                                           align="right">
+                                </sup></label>
+                                    ×<label>
+                                        <input type="text" name="n2m" size="40">
+                                        <sub>(2)</sub></label>
+                                    ×２<label><sup>
+                                        <input type="text" name="n2e" size="5">
+                                    </sup><sub>(10)</sub></label></td>
+                            </tr>
+                            <tr>
+                                <td>　</td>
+                                <td align="right"><input type="button" value="PMAC"
+                                                         onClick="ieee()"></td>
+                                <td>　</td>
+                            </tr>
+                            <tr>
+                                <td align="right"><input id="sign_part" type="text" name="ieee_s" size="1"
+                                                         align="right"></td>
+                                <td align="center"><input id="exp_part" type="text" name="ieee_e" size="10"></td>
+                                <td><input id="frac_part" type="text" name="ieee_m" size="32"></td>
+                            </tr>
+                            <tr>
+                                <td align="right"><label for="sign_part">符号部:s</label></td>
+                                <td align="center"><label for="exp_part">指数部:ee</label></td>
+                                <td><label for="frac_part">仮数部:xxx</label></td>
+                            </tr>
+                            <tr>
+                                <td>　</td>
+                                <td align="right"><input type="button" value="結合"
+                                                         onClick="ie2b_d(document.calf,document.calf.ieee2)"></td>
+                                <td>　</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" align="right">
+                                    <label>
+                                        <input type="text" name="ieee2" size="45" align="right"
+                                               onChange="b2h_d(document.calf.ieee2.value,8,document.calf.ieee16)">
+                                        <sub>(2)</sub>
+                                    </label>
+                                    ＝
+                                    <label>
+                                        <input type="text" name="ieee16" size="10" align="right"
+                                               onChange="h2b_d(document.calf.ieee16.value,32,document.calf.ieee2)">
+                                        <sub>(16)</sub>
+                                    </label>
+                                </td>
+                        </table>
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </li>
     <li>簡略版
         <table>
             <tr>
@@ -223,7 +251,10 @@
                             <td>指数部</td>
                             <td align="right">4　</td>
                             <td align="center">ee</td>
-                            <td>eのバイアス表現（B=<s>127</s>）</td>
+                            <td>eのバイアス表現（B=
+                                <del>127</del>
+                                ）
+                            </td>
                         </tr>
                         <tr>
                             <td>仮数部</td>
